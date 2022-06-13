@@ -1,12 +1,12 @@
 public class Item {
     String id;
     String name;
-    int price;
+    int amount;
 
-    Item(String id, String name, int price){
+    Item(String id, String name, int amount){
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.amount = amount;
     }
 
 }
