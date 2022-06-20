@@ -1,10 +1,11 @@
+package snack;
+
 public class Item {
-    String id;
     String name;
     int amount;
 
-    Item(String id, String name, int amount){
-        this.id = id;
+    Item(String name, int amount){
+
         this.name = name;
         this.amount = amount;
     }
