@@ -23,10 +23,36 @@ public class RequestHandler extends Thread{
 
         try(InputStream in = connection.getInputStream();
             OutputStream out = connection.getOutputStream()){
-            //TODO 사용자 요청에 대한 처리는 이곳에서 구현하면 된다.
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String line = br.readLine();
+            log.debug("request line :  {}",line);
+
+            if(line == null){
+                return;
+            }
+            String[] tokens = line.split(" ");
+            while(!"".equals(line)){
+                line = br.readLine();
+                log.debug("header : {}", line);
+            }
             DataOutputStream dos = new DataOutputStream(out);
-            String path = "src/webapp/index.html";
-            byte[] body = Files.readAllBytes(Path.of(path));
+            if("/product/regForm.html".equals(tokens[1])){
+                // 상품 폼 페이지
+                byte[] body = Files.readAllBytes(new File("./src/webapp/"+tokens[1]).toPath());
+                response200Header(dos, body.length);
+                responseBody(dos,body);
+            }
+            if("/product".equals(tokens[1])){
+
+                // 상품등록
+            }
+
+
+            //TODO 사용자 요청에 대한 처리는 이곳에서 구현하면 된다.
+
+            //String path = "src/webapp/index.html";
+            //byte[] body = Files.readAllBytes(Path.of(path));
+            byte[] body = Files.readAllBytes(new File("./src/webapp/"+tokens[1]).toPath());
             response200Header(dos, body.length);
             responseBody(dos,body);
 

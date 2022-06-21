@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+
 public class Products {
     List<Item> itemList = new ArrayList<Item>();
     HashMap<String,Item> itemHashMap = new HashMap<>();
-
 
 
     public void addItem(String id ,String name, int amount) {
