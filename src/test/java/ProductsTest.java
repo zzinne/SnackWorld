@@ -3,6 +3,7 @@ import snack.Item;
 import snack.Products;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ProductsTest {
 
@@ -78,12 +79,12 @@ public class ProductsTest {
 
         Products products = new Products();
 
-        products.addItem("1","a",100);
-        products.addItem("2","b",200);
-        products.addItem("3","c",300);
+        products.addItem("a",100);
+        products.addItem("b",200);
+        products.addItem("c",300);
 
-        for (Item value: products.itemHashMap.values()){
-            System.out.printf(" name: %s , amount:%d \n",value.name,value.amount);
+        for (Map.Entry<String,Item> value: products.itemHashMap.entrySet()){
+            System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
         }
     }
     @Test
@@ -91,17 +92,19 @@ public class ProductsTest {
 
         Products products = new Products();
 
-        products.addItem("1","a",100);
-        products.addItem("2","b",200);
-        products.addItem("3","c",300);
+        products.addItem("a",100);
+        products.addItem("b",200);
+        products.addItem("c",300);
 
-        for (Item value:products.itemHashMap.values()){
-            System.out.printf(" name: %s , amount:%d \n",value.name,value.amount);
+        for (Map.Entry<String,Item> value: products.itemHashMap.entrySet()){
+            System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
         }
 
-        products.addItem("2","update B",500);
-        for (Item value:products.itemHashMap.values()){
-            System.out.printf(" name: %s , amount:%d \n",value.name,value.amount);
+        String updateId = products.searchId("a");
+        products.updateItem(updateId,"updateA",500);
+
+        for (Map.Entry<String,Item> value: products.itemHashMap.entrySet()){
+            System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
         }
     }
     @Test
@@ -109,15 +112,17 @@ public class ProductsTest {
 
         Products products = new Products();
 
-        products.addItem("1","a",100);
-        products.addItem("2","b",200);
-        products.addItem("3","c",300);
+        products.addItem("a",100);
+        products.addItem("b",200);
+        products.addItem("c",300);
 
-        products.removeItem("2");
-        for (Item value:products.itemHashMap.values()){
-            System.out.printf("name: %s , amount:%d \n",value.name,value.amount);
+
+        String deleteId = products.searchId("a");
+        products.removeItem(deleteId);
+
+        for (Map.Entry<String,Item> value: products.itemHashMap.entrySet()) {
+            System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
         }
 
-
-    }
+        }
 }

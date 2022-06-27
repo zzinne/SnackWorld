@@ -1,10 +1,14 @@
 package server;
 
+import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import snack.Products;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -24,6 +28,7 @@ public class RequestHandler extends Thread{
         try(InputStream in = connection.getInputStream();
             OutputStream out = connection.getOutputStream()){
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            StringBuffer bf = new StringBuffer();
             String line = br.readLine();
             log.debug("request line :  {}",line);
 
@@ -31,9 +36,20 @@ public class RequestHandler extends Thread{
                 return;
             }
             String[] tokens = line.split(" ");
+            String dataLenth = "";
             while(!"".equals(line)){
+
+                if(line.contains("Content-Length")){
+                    dataLenth= line;
+                    log.debug(dataLenth);
+                }
                 line = br.readLine();
                 log.debug("header : {}", line);
+            }
+            String data = "";
+            if(dataLenth != ""){
+                data = requestData(br,Integer.parseInt(bodySplit(dataLenth)));
+                log.debug("data :"+data);
             }
             DataOutputStream dos = new DataOutputStream(out);
             if("/product/regForm.html".equals(tokens[1])){
@@ -43,6 +59,7 @@ public class RequestHandler extends Thread{
                 responseBody(dos,body);
             }
             if("/product".equals(tokens[1])){
+
 
                 // 상품등록
             }
@@ -84,6 +101,20 @@ public class RequestHandler extends Thread{
         }catch (IOException e){
             log.error(e.getMessage());
         }
+    }
+    public static String requestData(BufferedReader br, int contentLength) throws IOException{
+        char[] body = new char[contentLength];
+        br.read(body,0,contentLength);
+        return String.copyValueOf(body);
+    }
+
+    private static String bodySplit(String read){
+        String[] split = read.replaceAll(" ","").split(":");
+        return split[1];
+    }
+    private static String[] getData(String read){
+        String[] splitData = read.replaceAll("","").split(":");
+        return splitData;
     }
 
 

@@ -1,17 +1,15 @@
 package snack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import java.util.*;
 
 
 public class Products {
-    List<Item> itemList = new ArrayList<Item>();
-    HashMap<String,Item> itemHashMap = new HashMap<>();
+    public List<Item> itemList = new ArrayList<Item>();
+    public HashMap<String,Item> itemHashMap = new HashMap<>();
 
 
-    public void addItem(String id ,String name, int amount) {
+    public void addItem(String name, int amount) {
+        String id = UUID.randomUUID().toString();
         itemHashMap.put(id, new Item(name, amount));
     }
     public void removeItem(String id){
@@ -22,8 +20,18 @@ public class Products {
     };
 
     public void selectItem(){
-        for(Item item:itemHashMap.values()){
-            System.out.printf("name: %s , amount:%d \n",item.name,item.amount);
+        for (Map.Entry<String,Item> value: itemHashMap.entrySet()){
+            System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
         }
+    }
+    public String searchId(String name){
+        String id ="";
+        for (Map.Entry<String,Item> value : itemHashMap.entrySet()){
+            if(value.getValue().name.equals(name)){
+                id = value.getKey();
+                break;
+            }
+        }
+        return id;
     }
 }
