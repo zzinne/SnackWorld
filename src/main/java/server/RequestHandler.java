@@ -1,9 +1,13 @@
 package server;
 
+import db.Users;
 import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import snack.Products;
+import snack.User;
+import util.HttpRequestUtils;
+import util.IOUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -11,6 +15,8 @@ import java.net.Socket;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class RequestHandler extends Thread{
     private static final Logger log =  LoggerFactory.getLogger(RequestHandler.class);
@@ -48,7 +54,7 @@ public class RequestHandler extends Thread{
             }
             String data = "";
             if(dataLenth != ""){
-                data = requestData(br,Integer.parseInt(bodySplit(dataLenth)));
+                data = IOUtils.readData(br,Integer.parseInt(bodySplit(dataLenth)));
                 log.debug("data :"+data);
             }
             DataOutputStream dos = new DataOutputStream(out);
@@ -59,10 +65,27 @@ public class RequestHandler extends Thread{
                 responseBody(dos,body);
             }
             if("/product".equals(tokens[1])){
+                ArrayList<String> productData = productData(data);
+
+                Products products = new Products();
+
+                products.addItem("",);
 
 
                 // 상품등록
             }
+            if("/user/create".equals(tokens[1])){
+                String body = IOUtils.readData(br,Integer.parseInt(bodySplit(dataLenth)));
+                Map<String,String> params = HttpRequestUtils.parseQueryString(body);
+                User user = new User();
+                Users;
+                DataOutputStream dos = new DataOutputStream(out);
+                response302Header(dos);
+
+            }
+
+            //http세션 쿠키 키 jssionid
+             //       쿠키값 확인
 
 
             //TODO 사용자 요청에 대한 처리는 이곳에서 구현하면 된다.
@@ -85,6 +108,19 @@ public class RequestHandler extends Thread{
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html; charset=utf-8 \r\n");
             dos.writeBytes("Content-Length:"+lengthOfBodyContent+"\r\n");
+            // 로그인 성공시 dos.writeBytes("Set-Cookie: loggined=true; Path=/");
+            dos.writeBytes("\r\n");
+
+        }catch (IOException e){
+            log.error(e.getMessage());
+        }
+
+    }
+    private void response302Header(DataOutputStream dos, int lengthOfBodyContent){
+        try{
+            dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
+            dos.writeBytes("Location: /index.html \r\n");
+            // 로그인 성공시 dos.writeBytes("Set-Cookie: loggined=true; Path=/");
             dos.writeBytes("\r\n");
 
         }catch (IOException e){
@@ -112,9 +148,14 @@ public class RequestHandler extends Thread{
         String[] split = read.replaceAll(" ","").split(":");
         return split[1];
     }
-    private static String[] getData(String read){
-        String[] splitData = read.replaceAll("","").split(":");
-        return splitData;
+    private static ArrayList<String> productData(String bodyData){
+        String[] splitData = bodyData.split("&");
+        ArrayList<String> dataList = new ArrayList<>();
+        for(String value : splitData){
+           String subData = value.substring(value.indexOf("=")+1);
+           dataList.add(subData);
+        }
+        return dataList;
     }
 
 
