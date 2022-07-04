@@ -4,10 +4,12 @@ import db.Users;
 import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import snack.Item;
 import snack.Products;
 import snack.User;
 import util.HttpRequestUtils;
 import util.IOUtils;
+import util.ProductUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -16,6 +18,7 @@ import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RequestHandler extends Thread{
@@ -33,6 +36,7 @@ public class RequestHandler extends Thread{
 
         try(InputStream in = connection.getInputStream();
             OutputStream out = connection.getOutputStream()){
+            DataOutputStream dos = new DataOutputStream(out);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             StringBuffer bf = new StringBuffer();
             String line = br.readLine();
@@ -54,10 +58,10 @@ public class RequestHandler extends Thread{
             }
             String data = "";
             if(dataLenth != ""){
-                data = IOUtils.readData(br,Integer.parseInt(bodySplit(dataLenth)));
+                data = requestData(br,getContentLength(dataLenth));
                 log.debug("data :"+data);
             }
-            DataOutputStream dos = new DataOutputStream(out);
+
             if("/product/regForm.html".equals(tokens[1])){
                 // 상품 폼 페이지
                 byte[] body = Files.readAllBytes(new File("./src/webapp/"+tokens[1]).toPath());
@@ -65,27 +69,41 @@ public class RequestHandler extends Thread{
                 responseBody(dos,body);
             }
             if("/product".equals(tokens[1])){
-                ArrayList<String> productData = productData(data);
+                Map<String,String> params = HttpRequestUtils.parseQueryString(data);
+                String location = ProductUtils.productRegist(params);
+                response302Header(dos,location);
 
-                Products products = new Products();
+            }
+            if("/product/list".equals(tokens[1])){
 
-                products.addItem("",);
+                Products products =  new Products();
+                String body = "<!DOCTYPE html>"
+                              +"<head> 스낵월드 상품목록 </head>"
+                              +"<body>";
 
+                for (Map.Entry<String,Item> value: products.getItemHashMap().entrySet()){
+                    body = body + "상품명 : "+value.getValue().name+" 가격 : "+value.getValue().amount+"</br>";
+                }
+                body = body+"</body>"
+                      +"</html>";
 
-                // 상품등록
+                response200Header(dos, body.length());
+                responseBody(dos,body.getBytes());
             }
             if("/user/create".equals(tokens[1])){
-                String body = IOUtils.readData(br,Integer.parseInt(bodySplit(dataLenth)));
+                String body = IOUtils.readData(br,getContentLength(dataLenth));
                 Map<String,String> params = HttpRequestUtils.parseQueryString(body);
                 User user = new User();
-                Users;
-                DataOutputStream dos = new DataOutputStream(out);
-                response302Header(dos);
+
+                ;
+
+                //response302Header(dos,getContentLength(dataLenth));
 
             }
 
+
             //http세션 쿠키 키 jssionid
-             //       쿠키값 확인
+            //       쿠키값 확인
 
 
             //TODO 사용자 요청에 대한 처리는 이곳에서 구현하면 된다.
@@ -116,7 +134,7 @@ public class RequestHandler extends Thread{
         }
 
     }
-    private void response302Header(DataOutputStream dos, int lengthOfBodyContent){
+    private void response302Header(DataOutputStream dos, String location){
         try{
             dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
             dos.writeBytes("Location: /index.html \r\n");
@@ -144,19 +162,11 @@ public class RequestHandler extends Thread{
         return String.copyValueOf(body);
     }
 
-    private static String bodySplit(String read){
+    private static int getContentLength(String read){
         String[] split = read.replaceAll(" ","").split(":");
-        return split[1];
+        return Integer.parseInt(split[1]);
     }
-    private static ArrayList<String> productData(String bodyData){
-        String[] splitData = bodyData.split("&");
-        ArrayList<String> dataList = new ArrayList<>();
-        for(String value : splitData){
-           String subData = value.substring(value.indexOf("=")+1);
-           dataList.add(subData);
-        }
-        return dataList;
-    }
+
 
 
 }

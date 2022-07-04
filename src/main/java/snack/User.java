@@ -9,9 +9,5 @@ public class User {
     String authority;
     int totalAmount;
 
-    User(String name,String authority,int totalAmount){
-        this.name = name;
-        this.authority = authority;
-        this.totalAmount = totalAmount;
-    }
+
 }

@@ -1,12 +1,13 @@
 package snack;
 
+import lombok.Getter;
+
 import java.util.*;
 
-
+@Getter
 public class Products {
     public List<Item> itemList = new ArrayList<Item>();
     public HashMap<String,Item> itemHashMap = new HashMap<>();
-
 
     public void addItem(String name, int amount) {
         String id = UUID.randomUUID().toString();
