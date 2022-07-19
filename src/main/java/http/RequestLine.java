@@ -16,7 +16,7 @@ public class RequestLine {
     private  String queryString ;
 
     public RequestLine(String requestLine){
-        log.debug("");
+        log.debug("request line : {}",requestLine);
 
         String[] tokens = requestLine.split(" ");
         this.httpMethod = HttpMethod.valueOf(tokens[0]);
@@ -27,7 +27,16 @@ public class RequestLine {
         if(url.length == 2){
             this.queryString = url[1];
         }
-
-
     }
+
+    public HttpMethod getMethod(){
+        return httpMethod;
+    }
+    public String getPath(){
+        return path;
+    }
+    public String getQueryString(){
+        return queryString;
+    }
+
 }
