@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class RequestParams {
     private static final Logger log = LoggerFactory.getLogger(RequestParams.class);
-    public HashMap<String,String> requestParam;
+    public HashMap<String,String> requestParam = new HashMap<>();
 
     public void addQueryString(String queryString){
         putParams(queryString);

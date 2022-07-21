@@ -17,7 +17,5 @@ public class AddProductController extends AbstractController{
         Products.addItem(item);
         httpResponse.sendRedirect("/index.html");
 
-
-
     }
 }
