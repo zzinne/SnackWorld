@@ -99,7 +99,7 @@ public class RequestHandler extends Thread{
 
     private String getDefaultPath(String path){
         if(path.equals("/")){
-            return "/index.html";
+            return "./index.html";
         }
         return path;
     }

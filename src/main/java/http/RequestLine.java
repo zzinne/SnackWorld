@@ -21,7 +21,8 @@ public class RequestLine {
         String[] tokens = requestLine.split(" ");
         this.httpMethod = HttpMethod.valueOf(tokens[0]);
         String[] url = tokens[1].split("\\?");
-
+        log.debug("url : {}",url);
+        log.debug("httpMethod : {}",httpMethod);
         this.path = url[0];
 
         if(url.length == 2){
