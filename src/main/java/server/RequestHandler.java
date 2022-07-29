@@ -46,6 +46,7 @@ public class RequestHandler extends Thread{
             Controller controller = RequestMapping.getController(httpRequest.getPath());
             if(controller == null ){
                 String path = getDefaultPath(httpRequest.getPath());
+                httpResponse.forward(path);
             } else {
                 controller.service(httpRequest,httpResponse);
 //            if("/product/regForm.html".equals(tokens[1]))
@@ -99,7 +100,7 @@ public class RequestHandler extends Thread{
 
     private String getDefaultPath(String path){
         if(path.equals("/")){
-            return "./index.html";
+            return "/index.html";
         }
         return path;
     }

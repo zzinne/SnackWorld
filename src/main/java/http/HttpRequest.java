@@ -27,7 +27,6 @@ public class HttpRequest {
             requestParams.addQueryString(requestLine.getQueryString());
             httpHeaders = processHeaders(br);
             requestParams.addBody(IOUtils.readData(br, httpHeaders.getContentLength()));
-            String line = br.readLine();
 
         } catch (IOException e){
             log.error(e.getMessage());

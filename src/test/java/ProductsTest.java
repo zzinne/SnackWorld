@@ -79,9 +79,9 @@ public class ProductsTest {
 
         Products products = new Products();
 
-        products.addItem("a",100);
-        products.addItem("b",200);
-        products.addItem("c",300);
+        //products.addItem("a",100);
+        //products.addItem("b",200);
+        //products.addItem("c",300);
 
         for (Map.Entry<String,Item> value: products.itemHashMap.entrySet()){
             System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
@@ -92,9 +92,9 @@ public class ProductsTest {
 
         Products products = new Products();
 
-        products.addItem("a",100);
-        products.addItem("b",200);
-        products.addItem("c",300);
+        //products.addItem("a",100);
+        //products.addItem("b",200);
+        //products.addItem("c",300);
 
         for (Map.Entry<String,Item> value: products.itemHashMap.entrySet()){
             System.out.printf(" id: %s ,name: %s , amount:%d \n",value.getKey(),value.getValue().name,value.getValue().amount);
@@ -112,9 +112,9 @@ public class ProductsTest {
 
         Products products = new Products();
 
-        products.addItem("a",100);
-        products.addItem("b",200);
-        products.addItem("c",300);
+        //products.addItem("a",100);
+        //products.addItem("b",200);
+        //products.addItem("c",300);
 
 
         String deleteId = products.searchId("a");
